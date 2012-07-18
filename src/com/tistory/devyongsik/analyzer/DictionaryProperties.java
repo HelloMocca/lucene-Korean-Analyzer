@@ -13,7 +13,8 @@ public class DictionaryProperties {
 	private static DictionaryProperties instance = new DictionaryProperties();
 
 	private Properties prop;
-	private String resourceName = "com/tistory/devyongsik/analyzer/dictionary.properties";
+	private String resourceName = "dictionary.properties";
+	private final String defaultResourceName = "com/tistory/devyongsik/analyzer/dictionary.properties";
 
 	private DictionaryProperties() {
 		loadProperties();
@@ -24,10 +25,12 @@ public class DictionaryProperties {
 			logger.debug("load analyzer properties.....");
 
 		Class<DictionaryProperties> clazz = DictionaryProperties.class;
-		InputStream in = clazz.getClassLoader().getResourceAsStream(resourceName);
+		
+		InputStream in = clazz.getResourceAsStream(resourceName);
 		
 		if(in == null) {
 			logger.error(resourceName + " was not found!!! ");
+			in = clazz.getClassLoader().getResourceAsStream(defaultResourceName);			
 		}
 
 		prop = new Properties();

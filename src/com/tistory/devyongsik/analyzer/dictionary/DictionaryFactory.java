@@ -16,6 +16,7 @@ public class DictionaryFactory {
 	private Log logger = LogFactory.getLog(DictionaryFactory.class);
 
 	private static DictionaryFactory factory = new DictionaryFactory();
+	//private final String defaultDictionaryPackage = "com/tistory/devyongsik/analyzer/dictionary/";
 
 	//TODO 사전 중복으로 읽지 않도록..
 	//TODO 사전을 Map으로.. 초성 분리..맵 고민
@@ -36,10 +37,12 @@ public class DictionaryFactory {
 
 		BufferedReader in = null;
 		String dictionaryFile = DictionaryProperties.getInstance().getProperty(name.getPropertiesKey());
-		InputStream inputStream = DictionaryFactory.class.getClassLoader().getResourceAsStream(dictionaryFile);
+		InputStream inputStream = DictionaryFactory.class.getResourceAsStream(dictionaryFile);
 
 		if(inputStream == null) {
 			logger.error("couldn't find dictionary : " + dictionaryFile);
+			
+			inputStream = DictionaryFactory.class.getClassLoader().getResourceAsStream(dictionaryFile);
 		}
 
 		List<String> words = new ArrayList<String>();
