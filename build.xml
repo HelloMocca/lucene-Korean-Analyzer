@@ -58,6 +58,12 @@
 	</target>
 
 	<target name="create.jarfile" depends="build" description="Build the UCMP-OMP Common archive">
+		<copy todir="${build.dir}/classes/com/tistory/devyongsik" preservelastmodified="true">
+			<fileset dir="${src.dir}/com/tistory/devyongsik">
+				<include name="**/*.txt" />
+				<include name="**/*.properties" />
+			</fileset>
+		</copy>
 		<delete file="${dist.dir}/${name}_${version}.jar"/>
 		<jar jarfile="${dist.dir}/${name}_${version}.jar" compress="true" basedir="${build.dir}/classes" manifest="src/META-INF/MANIFEST.MF" />
 	</target>
