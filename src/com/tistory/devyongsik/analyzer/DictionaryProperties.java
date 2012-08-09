@@ -22,14 +22,14 @@ public class DictionaryProperties {
 
 	private void loadProperties() {
 		if(logger.isDebugEnabled())
-			logger.debug("load analyzer properties.....");
+			logger.debug("load analyzer properties..... : " + resourceName);
 
 		Class<DictionaryProperties> clazz = DictionaryProperties.class;
 		
-		InputStream in = clazz.getResourceAsStream(resourceName);
+		InputStream in = clazz.getClassLoader().getResourceAsStream(resourceName);
 		
 		if(in == null) {
-			logger.error(resourceName + " was not found!!! ");
+			logger.error(resourceName + " was not found!!! try read default resource : " + defaultResourceName);
 			in = clazz.getClassLoader().getResourceAsStream(defaultResourceName);			
 		}
 
@@ -40,6 +40,10 @@ public class DictionaryProperties {
 			in.close();
 		} catch (IOException e) {
 			logger.error(e.toString());
+		}
+		
+		if(logger.isInfoEnabled()) {
+			logger.info("dictionary.properties : " + prop);
 		}
 	}
 
