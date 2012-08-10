@@ -62,6 +62,16 @@
 			<fileset dir="${src.dir}/com/tistory/devyongsik">
 				<include name="**/*.txt" />
 				<include name="**/*.properties" />
+				<include name="**/*.dic" />
+				<include name="**/*.jflex" />
+			</fileset>
+		</copy>
+		<copy todir="${build.dir}/classes/org/apache/lucene/analysis/" preservelastmodified="true">
+			<fileset dir="${src.dir}/org/apache/lucene/analysis/">
+				<include name="**/*.txt" />
+				<include name="**/*.properties" />
+				<include name="**/*.dic" />
+				<include name="**/*.jflex" />
 			</fileset>
 		</copy>
 		<delete file="${dist.dir}/${name}_${version}.jar"/>
