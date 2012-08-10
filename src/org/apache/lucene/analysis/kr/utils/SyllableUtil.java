@@ -74,6 +74,14 @@ public class SyllableUtil {
 	
 	private static List Syllables;  // 음절특성 정보
 	
+	static {
+		try {
+			Syllables = getSyllableFeature();
+		} catch (MorphException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/**
 	 * 인덱스 값에 해당하는 음절의 특성을 반환한다.
 	 * 영자 또는 숫자일 경우는 모두 해당이 안되므로 가장 마지막 글자인 '힣' 의 음절특성을 반환한다.

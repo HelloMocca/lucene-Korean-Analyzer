@@ -1,7 +1,6 @@
 package com.tistory.devyongsik.analyzer;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
@@ -15,15 +14,14 @@ import org.apache.lucene.util.AttributeSource;
 import org.apache.lucene.util.AttributeSource.State;
 
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryFactory;
-import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
 
 public class KoreanBaseNounEngine implements Engine {
 	
 	private Log logger = LogFactory.getLog(KoreanBaseNounEngine.class);
 	private boolean isUseForIndexing = true;
 	
-	private List<String> nounsDic = new ArrayList<String>();
-	private List<String> customNounsDic = new ArrayList<String>();
+	private Map<String, String> nounsDic = new HashMap<String, String>();
+	private Map<String, String> customNounsDic = new HashMap<String, String>();
 	
 
 	protected void setIsUseForIndexing(boolean useForIndexing) {
@@ -39,8 +37,8 @@ public class KoreanBaseNounEngine implements Engine {
 			logger.info("init KoreanBaseNounEngine");
 		}
 		
-		nounsDic = DictionaryFactory.getFactory().get(DictionaryType.NOUN);
-		customNounsDic = DictionaryFactory.getFactory().get(DictionaryType.CUSTOM);
+		nounsDic = DictionaryFactory.getFactory().getBaseNounDictionary();
+		customNounsDic = DictionaryFactory.getFactory().getCustomNounDictionary();
 	}
 
 	@Override
@@ -89,7 +87,7 @@ public class KoreanBaseNounEngine implements Engine {
 			comparedWord = term.substring(startIndex, endIndex);
 			
 			//매칭될 때 State 저장
-			if((nounsDic.contains(comparedWord) || customNounsDic.contains(comparedWord)) && !term.equals(comparedWord)) {
+			if((nounsDic.containsKey(comparedWord) || customNounsDic.containsKey(comparedWord)) && !term.equals(comparedWord)) {
 
 				//offset도 계산해주어야 합니다. 그래야 하이라이팅이 잘 됩니다.
 				int startOffSet = orgStartOffset + startIndex;

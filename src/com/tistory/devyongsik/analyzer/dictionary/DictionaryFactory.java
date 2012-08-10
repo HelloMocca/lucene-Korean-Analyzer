@@ -21,6 +21,8 @@ public class DictionaryFactory {
 	private static DictionaryFactory factory = new DictionaryFactory();
 	private Map<DictionaryType, List<String>> dictionaryMap = new HashMap<DictionaryType, List<String>>();
 	private Map<String, List<String>> compoundDictionaryMap = new HashMap<String, List<String>>();
+	private Map<String, String> baseNounDictionaryMap = new HashMap<String, String>();
+	private Map<String, String> customNounDictionaryMap = new HashMap<String, String>();
 	
 	//private final String defaultDictionaryPackage = "com/tistory/devyongsik/analyzer/dictionary/";
 
@@ -58,6 +60,16 @@ public class DictionaryFactory {
 			
 			compoundDictionaryMap.put(key, Arrays.asList(nouns));
 		}
+		
+		List<String> baseNouns = dictionaryMap.get(DictionaryType.NOUN);
+		for(String noun : baseNouns) {
+			baseNounDictionaryMap.put(noun, null);
+		}
+		
+		List<String> customNouns = dictionaryMap.get(DictionaryType.CUSTOM);
+		for(String noun : customNouns) {
+			customNounDictionaryMap.put(noun, null);
+		}
 	}
 	
 	public List<String> get(DictionaryType name) {
@@ -68,6 +80,14 @@ public class DictionaryFactory {
 		return compoundDictionaryMap;
 	}
 
+	public Map<String, String> getBaseNounDictionary() {
+		return baseNounDictionaryMap;
+	}
+	
+	public Map<String, String> getCustomNounDictionary() {
+		return customNounDictionaryMap;
+	}
+	
 	private List<String> loadDictionary(DictionaryType name) {
 
 		BufferedReader in = null;

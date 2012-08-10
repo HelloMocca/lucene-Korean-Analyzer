@@ -1,6 +1,7 @@
 package com.tistory.devyongsik.analyzer;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -21,17 +22,17 @@ public class KoreanLongestNounEngine implements Engine {
 
 	private Log logger = LogFactory.getLog(KoreanLongestNounEngine.class);
 	
-	private List<String> nounsDic = new ArrayList<String>();
-	private List<String> customNounsDic = new ArrayList<String>();
-
+	private Map<String, String> nounsDic = new HashMap<String, String>();
+	private Map<String, String> customNounsDic = new HashMap<String, String>();
+	
 	
 	public KoreanLongestNounEngine() {
 		if(logger.isInfoEnabled()) {
 			logger.info("init KoreanLongestNounEngine");
 		}
 		
-		nounsDic = DictionaryFactory.getFactory().get(DictionaryType.NOUN);
-		customNounsDic = DictionaryFactory.getFactory().get(DictionaryType.CUSTOM);
+		nounsDic = DictionaryFactory.getFactory().getBaseNounDictionary();
+		customNounsDic = DictionaryFactory.getFactory().getCustomNounDictionary();
 	}
 
 	@Override
@@ -133,7 +134,7 @@ public class KoreanLongestNounEngine implements Engine {
 			comparedWord = term.substring(startIndex, endIndex);
 			
 			//매칭될 때 우선 matchedTerm에 저장
-			if(nounsDic.contains(comparedWord) || customNounsDic.contains(comparedWord)) {
+			if(nounsDic.containsKey(comparedWord) || customNounsDic.containsKey(comparedWord)) {
 				matchedTerm = comparedWord;
 				prevMatchedStartIndex = startIndex;
 				prevMatchedEndIndex = endIndex;
