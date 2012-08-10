@@ -1,6 +1,5 @@
 package com.tistory.devyongsik.analyzer;
 
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -16,60 +15,24 @@ import org.apache.lucene.util.AttributeSource;
 import org.apache.lucene.util.AttributeSource.State;
 
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryFactory;
-import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
 
 public class KoreanCompoundNounEngine implements Engine {
-
+	
 	private Log logger = LogFactory.getLog(KoreanCompoundNounEngine.class);
+	private Map<String, List<String>> compoundNouns = new HashMap<String, List<String>>();
 	
-	private Map<String,List<String>> compoundNouns = new HashMap<String,List<String>>();
-	
-	private static KoreanCompoundNounEngine koreanCompoundNounEngineInstance = new KoreanCompoundNounEngine();
-	
-	public static KoreanCompoundNounEngine getInstance() {
-		return koreanCompoundNounEngineInstance;
-	}
-	
-	private KoreanCompoundNounEngine() {
+	public KoreanCompoundNounEngine() {
 		if(logger.isInfoEnabled()) {
-			logger.info("사전을 읽습니다.");
+			logger.info("init KoreanCompoundNounEngine");
 		}
 		
-		loadDictionary();
-	}
-	
-	private void loadDictionary() {
-		if(logger.isInfoEnabled()) {
-			logger.info("어미-조사 사전을 로드합니다.");
-		}
-		
-		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
-		List<String> dictionaryData = dictionaryFactory.create(DictionaryType.COMPOUND);
-		
-		if(logger.isInfoEnabled()) {
-			logger.info("복합명사 사전 : [" + dictionaryData.size() + "]");
-		}
-		
-		//Map형태로 변환
-		String[] extractKey = null;
-		String key = null;
-		String[] nouns = null;
-		
-		for(String data : dictionaryData) {
-			extractKey = data.split(":");
-			key = extractKey[0];
-			nouns = extractKey[1].split(",");
-			
-			compoundNouns.put(key, Arrays.asList(nouns));
-		}
-		
-		if(logger.isInfoEnabled()) {
-			logger.info("사전 생성 완료");
-		}
+		compoundNouns = DictionaryFactory.getFactory().getCompoundDictionary();
 	}
 	
 	@Override
 	public void collectNounState(AttributeSource attributeSource, Stack<State> nounsStack, Map<String, String> returnedTokens) throws Exception {
+		
+		
 		CharTermAttribute termAttr = attributeSource.getAttribute(CharTermAttribute.class);
 		TypeAttribute typeAttr = attributeSource.getAttribute(TypeAttribute.class);
 		OffsetAttribute offSetAttr = attributeSource.getAttribute(OffsetAttribute.class);

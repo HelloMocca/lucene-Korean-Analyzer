@@ -39,23 +39,19 @@ import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
 
 public class KoreanSynonymEngine implements Engine {
 
-	private Log logger = LogFactory.getLog(KoreanSynonymEngine.class);
-
 	private RAMDirectory directory;
 	private IndexSearcher searcher;
 	private List<String> synonyms = new ArrayList<String>();
-	private static KoreanSynonymEngine synonymEngineInstance = new KoreanSynonymEngine();
+	private Log logger = LogFactory.getLog(KoreanSynonymEngine.class);
 	
-	public static KoreanSynonymEngine getInstance() {
-		return synonymEngineInstance;
-	}
-
-	private KoreanSynonymEngine() {
+	public KoreanSynonymEngine() {
+		
 		if(logger.isInfoEnabled()) {
-			logger.info("사전을 읽습니다.");
+			logger.info("init KoreanSynonymEngine");
 		}
 		
-		loadDictionary();
+		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
+		synonyms = dictionaryFactory.get(DictionaryType.SYNONYM);
 		
 		if(logger.isInfoEnabled()) {
 			logger.info("동의어 색인을 실시합니다.");
@@ -77,13 +73,9 @@ public class KoreanSynonymEngine implements Engine {
 			e.printStackTrace();
 		}
 	}
-	
-	private void loadDictionary() {
-		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
-		synonyms = dictionaryFactory.create(DictionaryType.SYNONYM);
-	}
 
 	private void createSynonymIndex() {
+		
 		directory = new RAMDirectory();
 
 		try {
@@ -133,6 +125,8 @@ public class KoreanSynonymEngine implements Engine {
 	}
 
 	private List<String> getWords(String word) throws Exception {
+		Log logger = LogFactory.getLog(KoreanSynonymEngine.class);
+		
 		List<String> synWordList = new ArrayList<String>();
 		if(logger.isDebugEnabled()) {
 			logger.debug("동의어 탐색 : " + word);
@@ -173,6 +167,8 @@ public class KoreanSynonymEngine implements Engine {
 
 	@Override
 	public void collectNounState(AttributeSource attributeSource, Stack<State> nounsStack, Map<String, String> returnedTokens) throws Exception {
+		Log logger = LogFactory.getLog(KoreanSynonymEngine.class);
+		
 		CharTermAttribute charTermAttr = attributeSource.getAttribute(CharTermAttribute.class);
 		OffsetAttribute offSetAttr = attributeSource.getAttribute(OffsetAttribute.class);
 		

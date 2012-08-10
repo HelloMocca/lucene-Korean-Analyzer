@@ -19,12 +19,12 @@ public class KoreanAnalyzer extends ReusableAnalyzerBase {
 			final Reader reader) {
 		
 		List<Engine> nounExtractEngines = new ArrayList<Engine>();
-		nounExtractEngines.add(KoreanStemmingEngine.getInstance());
-		nounExtractEngines.add(KoreanCompoundNounEngine.getInstance());
-		nounExtractEngines.add(KoreanBaseNounEngine.getInstance());
-		nounExtractEngines.add(KoreanLongestNounEngine.getInstance());
-		nounExtractEngines.add(KoreanSynonymEngine.getInstance());
-		nounExtractEngines.add(KoreanMorphEngine.getInstance());
+		nounExtractEngines.add(new KoreanStemmingEngine());
+		nounExtractEngines.add(new KoreanCompoundNounEngine());
+		nounExtractEngines.add(new KoreanBaseNounEngine());
+		nounExtractEngines.add(new KoreanLongestNounEngine());
+		nounExtractEngines.add(new KoreanSynonymEngine());
+		nounExtractEngines.add(new KoreanMorphEngine());
 		
 		Tokenizer tokenizer = new KoreanCharacterTokenizer(reader);
 		TokenStream tok = new KoreanNounFilter(tokenizer, nounExtractEngines);

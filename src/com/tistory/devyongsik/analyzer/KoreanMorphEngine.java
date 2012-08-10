@@ -25,17 +25,12 @@ import org.apache.lucene.util.AttributeSource.State;
  *
  */
 public class KoreanMorphEngine implements Engine {
-	private Log logger = LogFactory.getLog(KoreanMorphEngine.class);
-
-	private static KoreanMorphEngine koreanMorphEngine = new KoreanMorphEngine();
 
 	private MorphAnalyzer morph = null;
-	
-	public static KoreanMorphEngine getInstance() {
-		return koreanMorphEngine;
-	}
-	
-	private KoreanMorphEngine() {
+	private Log logger = LogFactory.getLog(KoreanMorphEngine.class);
+		
+	public KoreanMorphEngine() {
+		
 		if(logger.isInfoEnabled()) {
 			logger.info("init KoreanMorphEngine");
 		}
@@ -47,7 +42,7 @@ public class KoreanMorphEngine implements Engine {
 	@Override
 	public void collectNounState(AttributeSource attributeSource, Stack<State> nounsStack, Map<String, String> returnedTokens)
 			throws Exception {
-
+		
 		CharTermAttribute termAttr = attributeSource.getAttribute(CharTermAttribute.class);
 		TypeAttribute typeAttr = attributeSource.getAttribute(TypeAttribute.class);
 		OffsetAttribute offSetAttr = attributeSource.getAttribute(OffsetAttribute.class);
@@ -72,6 +67,8 @@ public class KoreanMorphEngine implements Engine {
 	
 	@SuppressWarnings("unchecked")
 	private void analysisKorean(AttributeSource attrSource, Stack<State> nounStateStack, Map<String, String> returnedTokens) throws MorphException {
+		Log logger = LogFactory.getLog(KoreanMorphEngine.class);
+		
 		if(logger.isDebugEnabled())
 			logger.debug("analysisKorean");
 
@@ -80,6 +77,8 @@ public class KoreanMorphEngine implements Engine {
 
 		String input = termAttr.toString();
 
+		logger.info("morph engine input : " + input);
+		
 		List<AnalysisOutput> outputs = morph.analyze(input);
 
 		//AnalysisOutput에는 각각의 단어에 대해 형태소 정보가 다 들어가 있고 getStem은 명사만 가져옴

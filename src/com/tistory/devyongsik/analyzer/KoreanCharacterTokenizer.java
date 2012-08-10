@@ -22,15 +22,18 @@ import org.apache.lucene.util.AttributeSource;
 
 public class KoreanCharacterTokenizer extends Tokenizer {
 
-	private Log logger = LogFactory.getLog(KoreanCharacterTokenizer.class);
-
 	private CharTermAttribute charTermAtt;
 	private OffsetAttribute offsetAtt;
 	private TypeAttribute typeAtt;
 	private PositionIncrementAttribute positionAtt;
 
 	public KoreanCharacterTokenizer(Reader input) {
+		
+		
 		super(input);
+		
+		Log logger = LogFactory.getLog(KoreanCharacterTokenizer.class);
+		
 		offsetAtt = addAttribute(OffsetAttribute.class);
 		charTermAtt = addAttribute(CharTermAttribute.class);
 		typeAtt = addAttribute(TypeAttribute.class);
@@ -84,6 +87,8 @@ public class KoreanCharacterTokenizer extends Tokenizer {
 
 	@Override
 	public boolean incrementToken() throws IOException {
+		Log logger = LogFactory.getLog(KoreanCharacterTokenizer.class);
+		
 		clearAttributes();
 
 		if(logger.isInfoEnabled())

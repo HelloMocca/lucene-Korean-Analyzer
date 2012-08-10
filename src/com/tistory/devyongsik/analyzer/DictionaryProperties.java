@@ -29,8 +29,9 @@ public class DictionaryProperties {
 		InputStream in = clazz.getClassLoader().getResourceAsStream(resourceName);
 		
 		if(in == null) {
-			logger.error(resourceName + " was not found!!! try read default resource : " + defaultResourceName);
+			logger.info(resourceName + " was not found!!! try read default resource : " + defaultResourceName);
 			in = clazz.getClassLoader().getResourceAsStream(defaultResourceName);			
+			logger.info(resourceName + " is loaded.");
 		}
 
 		prop = new Properties();

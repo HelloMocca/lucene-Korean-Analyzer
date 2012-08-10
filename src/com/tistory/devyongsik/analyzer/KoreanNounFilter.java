@@ -12,8 +12,6 @@ import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 
 public class KoreanNounFilter extends TokenFilter {
-	private Log logger = LogFactory.getLog(KoreanNounFilter.class);
-	
 	private Stack<State> nounsStack = new Stack<State>();
 	private List<Engine> engines;
 	private Map<String, String> returnedTokens = new HashMap<String, String>();
@@ -25,6 +23,8 @@ public class KoreanNounFilter extends TokenFilter {
 
 	@Override
 	public boolean incrementToken() throws IOException {
+		Log logger = LogFactory.getLog(KoreanNounFilter.class);
+		
 		if(logger.isDebugEnabled())
 			logger.debug("incrementToken KoreanNounFilter");
 		

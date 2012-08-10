@@ -20,45 +20,24 @@ import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
 public class KoreanLongestNounEngine implements Engine {
 
 	private Log logger = LogFactory.getLog(KoreanLongestNounEngine.class);
-
+	
 	private List<String> nounsDic = new ArrayList<String>();
 	private List<String> customNounsDic = new ArrayList<String>();
+
 	
-	private static KoreanLongestNounEngine koreanLongestNounEngine = new KoreanLongestNounEngine();
-
-	public static KoreanLongestNounEngine getInstance() {
-		return koreanLongestNounEngine;
-	}
-	
-	private KoreanLongestNounEngine() {
+	public KoreanLongestNounEngine() {
 		if(logger.isInfoEnabled()) {
-			logger.info("사전을 읽습니다.");
+			logger.info("init KoreanLongestNounEngine");
 		}
-
-		loadDictionary();
-	}
-
-	private void loadDictionary() {
-		if(logger.isInfoEnabled()) {
-			logger.info("명사사전을 로드합니다.");
-		}
-
-		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
-		nounsDic = dictionaryFactory.create(DictionaryType.NOUN);
-		customNounsDic = dictionaryFactory.create(DictionaryType.CUSTOM);
-
-		if(logger.isInfoEnabled()) {
-			logger.info("명사 사전 : [" + nounsDic.size() + "]");
-			logger.info("사용자 명사 사전 : [" + customNounsDic.size() + "]");
-		}
-
-		if(logger.isInfoEnabled()) {
-			logger.info("사전 생성 완료");
-		}
+		
+		nounsDic = DictionaryFactory.getFactory().get(DictionaryType.NOUN);
+		customNounsDic = DictionaryFactory.getFactory().get(DictionaryType.CUSTOM);
 	}
 
 	@Override
 	public void collectNounState(AttributeSource attributeSource, Stack<State> nounsStack, Map<String, String> returnedTokens) throws Exception {
+		
+		
 		CharTermAttribute termAttr = attributeSource.getAttribute(CharTermAttribute.class);
 		TypeAttribute typeAttr = attributeSource.getAttribute(TypeAttribute.class);
 		OffsetAttribute offSetAttr = attributeSource.getAttribute(OffsetAttribute.class);

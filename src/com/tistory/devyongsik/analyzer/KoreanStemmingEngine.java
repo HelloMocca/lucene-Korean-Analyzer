@@ -1,8 +1,6 @@
 package com.tistory.devyongsik.analyzer;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
@@ -18,56 +16,23 @@ import org.apache.lucene.util.AttributeSource.State;
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryFactory;
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
 
-public class KoreanStemmingEngine implements Engine {
-
+public class KoreanStemmingEngine implements Engine {	
+	private List<String> eomisJosaList = new ArrayList<String>();
 	private Log logger = LogFactory.getLog(KoreanStemmingEngine.class);
 	
-	private List<String> eomisJosaList = new ArrayList<String>();
-	private static KoreanStemmingEngine stemmingEngineInstance = new KoreanStemmingEngine();
-	
-	public static KoreanStemmingEngine getInstance() {
-		return stemmingEngineInstance;
-	}
-	
-	private KoreanStemmingEngine() {
-		if(logger.isInfoEnabled()) {
-			logger.info("사전을 읽습니다.");
-		}
+	public KoreanStemmingEngine() {
 		
-		loadDictionary();
-	}
-	
-	private void loadDictionary() {
-		if(logger.isInfoEnabled()) {
-			logger.info("어미-조사 사전을 로드합니다.");
-		}
-		
-		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
-		eomisJosaList = dictionaryFactory.create(DictionaryType.EOMI);
 		
 		if(logger.isInfoEnabled()) {
-			logger.info("어미-조사 사전 : [" + eomisJosaList.size() + "]");
+			logger.info("init KoreanStemmingEngine..");
 		}
 		
-		//가장 긴 순으로 정렬한다.
-		Collections.sort(eomisJosaList, new Comparator<String>() {
-
-			@Override
-			public int compare(String o1, String o2) {
-				int o1Length = o1.length();
-				int o2Length = o2.length();
-				
-				return o2Length - o1Length;
-			}
-		});
-		
-		if(logger.isInfoEnabled()) {
-			logger.info("사전 정렬 완료");
-		}
+		eomisJosaList = DictionaryFactory.getFactory().get(DictionaryType.EOMI);
 	}
 	
 	@Override
 	public void collectNounState(AttributeSource attributeSource, Stack<State> nounsStack, Map<String, String> returnedTokens) throws Exception {
+		
 		CharTermAttribute characterAttr = attributeSource.getAttribute(CharTermAttribute.class);
 		OffsetAttribute offSetAttr = attributeSource.getAttribute(OffsetAttribute.class);
 		

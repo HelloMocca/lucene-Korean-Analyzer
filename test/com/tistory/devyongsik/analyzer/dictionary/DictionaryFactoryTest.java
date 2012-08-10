@@ -13,7 +13,7 @@ public class DictionaryFactoryTest {
 		DictionaryType[] dics = DictionaryType.values();
 		for(DictionaryType dic : dics) {
 			DictionaryFactory factory = DictionaryFactory.getFactory();
-			List<String> readWords = factory.create(dic);
+			List<String> readWords = factory.get(dic);
 			
 			Assert.assertTrue(readWords.size() > 0);
 		}

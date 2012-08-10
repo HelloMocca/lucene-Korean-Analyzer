@@ -29,7 +29,7 @@ public class KoreanMorphEngineTest extends AnalyzerTestUtil {
 	public void initDictionary() {
 		nouns = new HashSet<TestToken>();
 		
-		engines.add(KoreanMorphEngine.getInstance());
+		engines.add(new KoreanMorphEngine());
 	}
 
 	@Test

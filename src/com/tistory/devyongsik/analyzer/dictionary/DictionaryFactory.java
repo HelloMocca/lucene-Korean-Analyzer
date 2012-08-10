@@ -5,7 +5,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -16,6 +19,9 @@ public class DictionaryFactory {
 	private Log logger = LogFactory.getLog(DictionaryFactory.class);
 
 	private static DictionaryFactory factory = new DictionaryFactory();
+	private Map<DictionaryType, List<String>> dictionaryMap = new HashMap<DictionaryType, List<String>>();
+	private Map<String, List<String>> compoundDictionaryMap = new HashMap<String, List<String>>();
+	
 	//private final String defaultDictionaryPackage = "com/tistory/devyongsik/analyzer/dictionary/";
 
 	//TODO 사전 중복으로 읽지 않도록..
@@ -25,24 +31,55 @@ public class DictionaryFactory {
 		return factory;
 	}
 
-	public List<String> create(DictionaryType name) {
-		List<String> dic = loadDictionary(name);
-		return dic;
+	private DictionaryFactory() {
+		initDictionary();
+	}
+	
+	private void initDictionary() {
+		DictionaryType[] dictionaryTypes = DictionaryType.values();
+		for(DictionaryType dictionaryType : dictionaryTypes) {
+			if(logger.isInfoEnabled()) {
+				logger.info("["+dictionaryType.getDescription()+"] "+"create wordset from file");
+			}
+			
+			List<String> dictionary = loadDictionary(dictionaryType);
+			dictionaryMap.put(dictionaryType, dictionary);
+		}
+		
+		List<String> dictionaryData = dictionaryMap.get(DictionaryType.COMPOUND);
+		String[] extractKey = null;
+		String key = null;
+		String[] nouns = null;
+		
+		for(String data : dictionaryData) {
+			extractKey = data.split(":");
+			key = extractKey[0];
+			nouns = extractKey[1].split(",");
+			
+			compoundDictionaryMap.put(key, Arrays.asList(nouns));
+		}
+	}
+	
+	public List<String> get(DictionaryType name) {
+		return dictionaryMap.get(name);
+	}
+	
+	public Map<String, List<String>> getCompoundDictionary() {
+		return compoundDictionaryMap;
 	}
 
 	private List<String> loadDictionary(DictionaryType name) {
-		if(logger.isInfoEnabled()) {
-			logger.info("["+name.getDescription()+"] "+"create wordset from file");
-		}
 
 		BufferedReader in = null;
 		String dictionaryFile = DictionaryProperties.getInstance().getProperty(name.getPropertiesKey());
-		InputStream inputStream = DictionaryFactory.class.getResourceAsStream(dictionaryFile);
+		InputStream inputStream = DictionaryFactory.class.getClassLoader().getResourceAsStream(dictionaryFile);
 
 		if(inputStream == null) {
-			logger.error("couldn't find dictionary : " + dictionaryFile);
+			logger.info("couldn't find dictionary : " + dictionaryFile);
 			
-			inputStream = DictionaryFactory.class.getClassLoader().getResourceAsStream(dictionaryFile);
+			inputStream = DictionaryFactory.class.getResourceAsStream(dictionaryFile);
+			
+			logger.info(dictionaryFile + " file loaded.. from classloader.");
 		}
 
 		List<String> words = new ArrayList<String>();

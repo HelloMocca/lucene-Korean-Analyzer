@@ -23,7 +23,7 @@ public class KoreanBaseNounEngineTest extends AnalyzerTestUtil {
 	@Before
 	public void initDictionary() {
 		nouns = new HashSet<TestToken>();
-		engines.add(KoreanBaseNounEngine.getInstance());
+		engines.add(new KoreanBaseNounEngine());
 	}
 
 	@Test

@@ -16,33 +16,26 @@ import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
 
 public class KoreanStopFilter extends TokenFilter {
 
-	private Log logger = LogFactory.getLog(KoreanStopFilter.class);
 	private boolean enablePositionIncrements = false;
 
 	private CharTermAttribute charTermAtt;
 	private PositionIncrementAttribute posIncrAtt;
-
+	private Log logger = LogFactory.getLog(KoreanStopFilter.class);
 	private List<String> stopWords = new ArrayList<String>();
 	
 	protected KoreanStopFilter(TokenStream input) {
 		super(input);
-		loadDictionary();
-		charTermAtt = getAttribute(CharTermAttribute.class);
-		posIncrAtt = getAttribute(PositionIncrementAttribute.class);
-	}
-
-	private void loadDictionary() {
-		if(logger.isInfoEnabled()) {
-			logger.info("불용어 사전을 로드합니다.");
-		}
-		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
-		stopWords = dictionaryFactory.create(DictionaryType.STOP);
 		
 		if(logger.isInfoEnabled()) {
-			logger.info("불용어 사전 : [" + stopWords.size() + "]");
+			logger.info("init KoreanStopFilter");
 		}
+		charTermAtt = getAttribute(CharTermAttribute.class);
+		posIncrAtt = getAttribute(PositionIncrementAttribute.class);
+		
+		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
+		stopWords = dictionaryFactory.get(DictionaryType.STOP);
 	}
-	
+
 	public void setEnablePositionIncrements(boolean enable) {
 		this.enablePositionIncrements = enable;
 	}
@@ -53,6 +46,7 @@ public class KoreanStopFilter extends TokenFilter {
 	
 	@Override
 	public boolean incrementToken() throws IOException {
+		
 		if(logger.isDebugEnabled())
 			logger.debug("incrementToken KoreanStopFilter");
 

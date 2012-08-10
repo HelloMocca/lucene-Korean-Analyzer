@@ -25,7 +25,7 @@ public class KoreanLongestNounEngineTest extends AnalyzerTestUtil {
 	public void initDictionary() {
 		nouns = new HashSet<TestToken>();
 		
-		engines.add(KoreanLongestNounEngine.getInstance());
+		engines.add(new KoreanLongestNounEngine());
 	}
 
 	@Test

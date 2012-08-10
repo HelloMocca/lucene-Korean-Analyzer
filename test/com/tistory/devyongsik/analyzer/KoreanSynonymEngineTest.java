@@ -28,7 +28,7 @@ public class KoreanSynonymEngineTest {
 		synonymWordList.add("노트북피씨");
 		synonymWordList.add("notebook");
 		
-		engines.add(KoreanSynonymEngine.getInstance());
+		engines.add(new KoreanSynonymEngine());
 	}
 
 	@Test

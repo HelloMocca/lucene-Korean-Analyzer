@@ -29,7 +29,7 @@ public class KoreanCompoundNounEngineTest extends AnalyzerTestUtil {
 		compondNouns.add(getToken("월드컵", 0, 3));
 		compondNouns.add(getToken("월드컵조직위원회분과위", 0, 11));
 		
-		engines.add(KoreanCompoundNounEngine.getInstance());
+		engines.add(new KoreanCompoundNounEngine());
 	}
 
 	@Test

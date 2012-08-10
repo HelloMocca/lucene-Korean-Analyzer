@@ -30,7 +30,7 @@ public class KoreanStemEngineTest extends AnalyzerTestUtil {
 		stemmingToken.add(getToken("사랑", 0, 2));
 		stemmingToken.add(getToken("사랑하고", 0, 4));
 		
-		engines.add(KoreanStemmingEngine.getInstance());
+		engines.add(new KoreanStemmingEngine());
 	}
 
 	@Test
