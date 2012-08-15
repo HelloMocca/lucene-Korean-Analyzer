@@ -82,5 +82,11 @@
 				<include name="*.jar" />
 			</fileset>
 		</copy>
+		
+		<copy todir="/Users/need4spd/Programming/Java/workspace/crescent/WebContent/WEB-INF/lib" preservelastmodified="true">
+			<fileset dir="${dist.dir}">
+				<include name="*.jar" />
+			</fileset>
+		</copy>
 	</target>
 </project>
