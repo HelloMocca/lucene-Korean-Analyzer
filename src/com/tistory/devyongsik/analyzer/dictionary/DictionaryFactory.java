@@ -10,13 +10,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tistory.devyongsik.analyzer.DictionaryProperties;
 
 public class DictionaryFactory {
-	private Log logger = LogFactory.getLog(DictionaryFactory.class);
+	private Logger logger = LoggerFactory.getLogger(DictionaryFactory.class);
 
 	private static DictionaryFactory factory = new DictionaryFactory();
 	private Map<DictionaryType, List<String>> dictionaryMap = new HashMap<DictionaryType, List<String>>();

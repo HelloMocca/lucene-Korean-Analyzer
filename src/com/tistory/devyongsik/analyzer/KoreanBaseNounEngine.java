@@ -4,20 +4,20 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.apache.lucene.util.AttributeSource;
 import org.apache.lucene.util.AttributeSource.State;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryFactory;
 
 public class KoreanBaseNounEngine implements Engine {
 	
-	private Log logger = LogFactory.getLog(KoreanBaseNounEngine.class);
+	private Logger logger = LoggerFactory.getLogger(KoreanBaseNounEngine.class);
 	private boolean isUseForIndexing = true;
 	
 	private Map<String, String> nounsDic = new HashMap<String, String>();

@@ -77,7 +77,7 @@
 		<delete file="${dist.dir}/${name}_${version}.jar"/>
 		<jar jarfile="${dist.dir}/${name}_${version}.jar" compress="true" basedir="${build.dir}/classes" manifest="src/META-INF/MANIFEST.MF" />
 		
-		<copy todir="/Users/need4spd/Java/workspace/fullmoon/WebContent/WEB-INF/lib" preservelastmodified="true">
+		<copy todir="/Users/need4spd/Programming/Java/workspace/fullmoon/WebContent/WEB-INF/lib" preservelastmodified="true">
 			<fileset dir="${dist.dir}">
 				<include name="*.jar" />
 			</fileset>

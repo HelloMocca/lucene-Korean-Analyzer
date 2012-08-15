@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Analyzer;
 import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
@@ -31,8 +29,10 @@ import org.apache.lucene.search.TopScoreDocCollector;
 import org.apache.lucene.store.LockObtainFailedException;
 import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.AttributeSource;
-import org.apache.lucene.util.Version;
 import org.apache.lucene.util.AttributeSource.State;
+import org.apache.lucene.util.Version;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryFactory;
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
@@ -42,7 +42,7 @@ public class KoreanSynonymEngine implements Engine {
 	private RAMDirectory directory;
 	private IndexSearcher searcher;
 	private List<String> synonyms = new ArrayList<String>();
-	private Log logger = LogFactory.getLog(KoreanSynonymEngine.class);
+	private Logger logger = LoggerFactory.getLogger(KoreanSynonymEngine.class);
 	
 	public KoreanSynonymEngine() {
 		
@@ -125,8 +125,6 @@ public class KoreanSynonymEngine implements Engine {
 	}
 
 	private List<String> getWords(String word) throws Exception {
-		Log logger = LogFactory.getLog(KoreanSynonymEngine.class);
-		
 		List<String> synWordList = new ArrayList<String>();
 		if(logger.isDebugEnabled()) {
 			logger.debug("동의어 탐색 : " + word);
@@ -167,8 +165,6 @@ public class KoreanSynonymEngine implements Engine {
 
 	@Override
 	public void collectNounState(AttributeSource attributeSource, Stack<State> nounsStack, Map<String, String> returnedTokens) throws Exception {
-		Log logger = LogFactory.getLog(KoreanSynonymEngine.class);
-		
 		CharTermAttribute charTermAttr = attributeSource.getAttribute(CharTermAttribute.class);
 		OffsetAttribute offSetAttr = attributeSource.getAttribute(OffsetAttribute.class);
 		

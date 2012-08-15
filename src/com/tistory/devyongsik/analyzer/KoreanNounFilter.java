@@ -6,12 +6,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KoreanNounFilter extends TokenFilter {
+	private Logger logger = LoggerFactory.getLogger(KoreanNounFilter.class);
+	
 	private Stack<State> nounsStack = new Stack<State>();
 	private List<Engine> engines;
 	private Map<String, String> returnedTokens = new HashMap<String, String>();
@@ -23,7 +25,7 @@ public class KoreanNounFilter extends TokenFilter {
 
 	@Override
 	public boolean incrementToken() throws IOException {
-		Log logger = LogFactory.getLog(KoreanNounFilter.class);
+		
 		
 		if(logger.isDebugEnabled())
 			logger.debug("incrementToken KoreanNounFilter");

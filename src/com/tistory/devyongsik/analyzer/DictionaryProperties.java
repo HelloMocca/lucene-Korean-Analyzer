@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DictionaryProperties {
-	private Log logger = LogFactory.getLog(DictionaryProperties.class);
+	private Logger logger = LoggerFactory.getLogger(DictionaryProperties.class);
 	
 	private static DictionaryProperties instance = new DictionaryProperties();
 

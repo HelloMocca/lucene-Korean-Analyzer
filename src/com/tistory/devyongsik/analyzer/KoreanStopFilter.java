@@ -4,12 +4,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryFactory;
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
@@ -20,7 +20,7 @@ public class KoreanStopFilter extends TokenFilter {
 
 	private CharTermAttribute charTermAtt;
 	private PositionIncrementAttribute posIncrAtt;
-	private Log logger = LogFactory.getLog(KoreanStopFilter.class);
+	private Logger logger = LoggerFactory.getLogger(KoreanStopFilter.class);
 	private List<String> stopWords = new ArrayList<String>();
 	
 	protected KoreanStopFilter(TokenStream input) {

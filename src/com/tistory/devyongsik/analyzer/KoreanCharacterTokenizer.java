@@ -4,14 +4,14 @@ package com.tistory.devyongsik.analyzer;
 import java.io.IOException;
 import java.io.Reader;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.Tokenizer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.apache.lucene.util.AttributeSource;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * 입력되는 문장을 읽어 Token으로 만들어 return
@@ -32,7 +32,7 @@ public class KoreanCharacterTokenizer extends Tokenizer {
 		
 		super(input);
 		
-		Log logger = LogFactory.getLog(KoreanCharacterTokenizer.class);
+		Logger logger = LoggerFactory.getLogger(KoreanCharacterTokenizer.class);
 		
 		offsetAtt = addAttribute(OffsetAttribute.class);
 		charTermAtt = addAttribute(CharTermAttribute.class);
@@ -87,7 +87,7 @@ public class KoreanCharacterTokenizer extends Tokenizer {
 
 	@Override
 	public boolean incrementToken() throws IOException {
-		Log logger = LogFactory.getLog(KoreanCharacterTokenizer.class);
+		Logger logger = LoggerFactory.getLogger(KoreanCharacterTokenizer.class);
 		
 		clearAttributes();
 

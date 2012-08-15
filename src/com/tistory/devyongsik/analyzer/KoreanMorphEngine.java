@@ -6,8 +6,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
 import org.apache.lucene.analysis.kr.morph.AnalysisOutput;
 import org.apache.lucene.analysis.kr.morph.CompoundEntry;
 import org.apache.lucene.analysis.kr.morph.MorphAnalyzer;
@@ -19,6 +17,8 @@ import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.apache.lucene.util.AttributeSource;
 import org.apache.lucene.util.AttributeSource.State;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author need4spd, need4spd@cplanet.co.kr, 2011. 10. 14.
@@ -27,7 +27,7 @@ import org.apache.lucene.util.AttributeSource.State;
 public class KoreanMorphEngine implements Engine {
 
 	private MorphAnalyzer morph = null;
-	private Log logger = LogFactory.getLog(KoreanMorphEngine.class);
+	private Logger logger = LoggerFactory.getLogger(KoreanMorphEngine.class);
 		
 	public KoreanMorphEngine() {
 		
@@ -67,7 +67,6 @@ public class KoreanMorphEngine implements Engine {
 	
 	@SuppressWarnings("unchecked")
 	private void analysisKorean(AttributeSource attrSource, Stack<State> nounStateStack, Map<String, String> returnedTokens) throws MorphException {
-		Log logger = LogFactory.getLog(KoreanMorphEngine.class);
 		
 		if(logger.isDebugEnabled())
 			logger.debug("analysisKorean");
