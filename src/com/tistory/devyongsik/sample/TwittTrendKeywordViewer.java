@@ -61,7 +61,7 @@ public class TwittTrendKeywordViewer {
 			for (Tweet tweet : result.getTweets()) {
 				System.out.println(tweet.getFromUser() + ":" + tweet.getText());
 
-				Analyzer analyzer = new KoreanAnalyzer();
+				Analyzer analyzer = new KoreanAnalyzer(false);
 				TokenStream stream = analyzer.reusableTokenStream("dummy", new StringReader(tweet.getText()));
 
 				CharTermAttribute charTermAtt = stream.getAttribute(CharTermAttribute.class);

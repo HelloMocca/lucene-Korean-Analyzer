@@ -33,7 +33,7 @@ public class AnalyzerTest extends AnalyzerTestUtil {
 		nouns.add(getToken("속도", 1, 3));
 		nouns.add(getToken("고", 0, 1));
 		
-		Analyzer analyzer = new KoreanAnalyzer();
+		Analyzer analyzer = new KoreanAnalyzer(true);
 		TokenStream stream = analyzer.reusableTokenStream("dummy", reader);
 		
 		CharTermAttribute charTermAtt = stream.getAttribute(CharTermAttribute.class);
@@ -59,7 +59,7 @@ public class AnalyzerTest extends AnalyzerTestUtil {
 		nouns.add(getToken("속도", 1, 3));
 		nouns.add(getToken("고", 0, 1));
 		
-		Analyzer analyzer = new KoreanAnalyzer();
+		Analyzer analyzer = new KoreanAnalyzer(true);
 		TokenStream stream = analyzer.reusableTokenStream("dummy", reader);
 		
 		CharTermAttribute charTermAtt = stream.getAttribute(CharTermAttribute.class);

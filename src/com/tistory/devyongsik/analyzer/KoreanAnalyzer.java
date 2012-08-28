@@ -14,23 +14,44 @@ import org.apache.lucene.analysis.Tokenizer;
  */
 public class KoreanAnalyzer extends ReusableAnalyzerBase {
 
+	private boolean isIndexingMode = false;
+	
+	public KoreanAnalyzer(boolean isIndexingMode) {
+		this.isIndexingMode = isIndexingMode;
+	}
+	
 	@Override
 	protected TokenStreamComponents createComponents(final String fieldName,
 			final Reader reader) {
 		
-		List<Engine> nounExtractEngines = new ArrayList<Engine>();
-		nounExtractEngines.add(new KoreanStemmingEngine());
-		nounExtractEngines.add(new KoreanCompoundNounEngine());
-		nounExtractEngines.add(new KoreanBaseNounEngine());
-		nounExtractEngines.add(new KoreanLongestNounEngine());
-		nounExtractEngines.add(new KoreanSynonymEngine());
-		nounExtractEngines.add(new KoreanMorphEngine());
-		
-		Tokenizer tokenizer = new KoreanCharacterTokenizer(reader);
-		TokenStream tok = new KoreanNounFilter(tokenizer, nounExtractEngines);
-		tok = new KoreanStopFilter(tok);
-
-		return new TokenStreamComponents(tokenizer, tok);
+		if(isIndexingMode) {
+			List<Engine> nounExtractEngines = new ArrayList<Engine>();
+			nounExtractEngines.add(new KoreanStemmingEngine());
+			nounExtractEngines.add(new KoreanCompoundNounEngine());
+			nounExtractEngines.add(new KoreanBaseNounEngine());
+			nounExtractEngines.add(new KoreanLongestNounEngine());
+			nounExtractEngines.add(new KoreanSynonymEngine());
+			nounExtractEngines.add(new KoreanMorphEngine());
+			
+			Tokenizer tokenizer = new KoreanCharacterTokenizer(reader);
+			TokenStream tok = new KoreanNounFilter(tokenizer, nounExtractEngines);
+			tok = new KoreanStopFilter(tok);
+	
+			return new TokenStreamComponents(tokenizer, tok);
+		} else {
+			List<Engine> nounExtractEngines = new ArrayList<Engine>();
+			nounExtractEngines.add(new KoreanStemmingEngine());
+			nounExtractEngines.add(new KoreanCompoundNounEngine());
+			nounExtractEngines.add(new KoreanLongestNounEngine());
+			nounExtractEngines.add(new KoreanSynonymEngine());
+			nounExtractEngines.add(new KoreanMorphEngine());
+			
+			Tokenizer tokenizer = new KoreanCharacterTokenizer(reader);
+			TokenStream tok = new KoreanNounFilter(tokenizer, nounExtractEngines);
+			tok = new KoreanStopFilter(tok);
+	
+			return new TokenStreamComponents(tokenizer, tok);	
+		}
 	}
 
 }

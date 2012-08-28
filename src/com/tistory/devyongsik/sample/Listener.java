@@ -26,7 +26,7 @@ public class Listener implements ActionListener {
 
 			String targetSentence = AnalysisResultViewer.textTextArea.getText();
 
-			Analyzer analyzer = new KoreanAnalyzer();
+			Analyzer analyzer = new KoreanAnalyzer(false);
 			TokenStream stream = null;
 			try {
 				stream = analyzer.reusableTokenStream("dummy", new StringReader(targetSentence));
