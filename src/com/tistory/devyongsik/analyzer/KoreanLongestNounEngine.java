@@ -19,8 +19,8 @@ public class KoreanLongestNounEngine implements Engine {
 
 	private Logger logger = LoggerFactory.getLogger(KoreanLongestNounEngine.class);
 	
-	private Map<String, String> nounsDic = new HashMap<String, String>();
-	private Map<String, String> customNounsDic = new HashMap<String, String>();
+	private static Map<String, String> nounsDic = new HashMap<String, String>();
+	private static Map<String, String> customNounsDic = new HashMap<String, String>();
 	
 	
 	public KoreanLongestNounEngine() {

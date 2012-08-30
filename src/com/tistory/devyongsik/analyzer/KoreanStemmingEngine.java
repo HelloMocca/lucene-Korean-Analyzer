@@ -17,7 +17,7 @@ import com.tistory.devyongsik.analyzer.dictionary.DictionaryFactory;
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
 
 public class KoreanStemmingEngine implements Engine {	
-	private List<String> eomisJosaList = new ArrayList<String>();
+	private static List<String> eomisJosaList = new ArrayList<String>();
 	private Logger logger = LoggerFactory.getLogger(KoreanStemmingEngine.class);
 	
 	public KoreanStemmingEngine() {

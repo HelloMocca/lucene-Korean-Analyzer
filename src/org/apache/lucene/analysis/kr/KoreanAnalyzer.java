@@ -108,21 +108,21 @@ public class KoreanAnalyzer extends StopwordAnalyzerBase {
    * @see WordlistLoader#getWordSet(File)
    */
 	public KoreanAnalyzer(Version matchVersion, File stopwords) throws IOException {     
-        this(matchVersion, WordlistLoader.getWordSet(new InputStreamReader(new FileInputStream(stopwords), DIC_ENCODING)));        
+        this(matchVersion, WordlistLoader.getWordSet(new InputStreamReader(new FileInputStream(stopwords), DIC_ENCODING), Version.LUCENE_36));        
 	}
 
   /** Builds an analyzer with the stop words from the given file.
    * @see WordlistLoader#getWordSet(File)
    */
 	public KoreanAnalyzer(Version matchVersion, File stopwords, String encoding) throws IOException {
-        this(matchVersion, WordlistLoader.getWordSet(new InputStreamReader(new FileInputStream(stopwords), encoding)));
+        this(matchVersion, WordlistLoader.getWordSet(new InputStreamReader(new FileInputStream(stopwords), encoding), Version.LUCENE_36));
 	}
 		
 	/** Builds an analyzer with the stop words from the given reader.
 	 * @see WordlistLoader#getWordSet(Reader)
 	*/
 	public KoreanAnalyzer(Version matchVersion, Reader stopwords) throws IOException {
-	   this(matchVersion, WordlistLoader.getWordSet(stopwords));	    
+	   this(matchVersion, WordlistLoader.getWordSet(stopwords, Version.LUCENE_36));	    
 	}
 
 	/** Builds an analyzer with the stop words from the given reader.

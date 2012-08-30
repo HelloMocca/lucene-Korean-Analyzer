@@ -18,6 +18,7 @@ import org.apache.lucene.document.Field.Index;
 import org.apache.lucene.document.Field.Store;
 import org.apache.lucene.document.Field.TermVector;
 import org.apache.lucene.index.CorruptIndexException;
+import org.apache.lucene.index.IndexReader;
 import org.apache.lucene.index.IndexWriter;
 import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
@@ -39,32 +40,32 @@ import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
 
 public class KoreanSynonymEngine implements Engine {
 
-	private RAMDirectory directory;
-	private IndexSearcher searcher;
-	private List<String> synonyms = new ArrayList<String>();
-	private Logger logger = LoggerFactory.getLogger(KoreanSynonymEngine.class);
+	private static RAMDirectory directory;
+	private static IndexSearcher searcher;
 	
-	public KoreanSynonymEngine() {
+	private static List<String> synonyms = new ArrayList<String>();
+	private static Logger loggerStatic = LoggerFactory.getLogger(KoreanSynonymEngine.class);
+	
+	static {
 		
-		if(logger.isInfoEnabled()) {
-			logger.info("init KoreanSynonymEngine");
-		}
+		loggerStatic.info("init KoreanSynonymEngine");
 		
 		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
 		synonyms = dictionaryFactory.get(DictionaryType.SYNONYM);
 		
-		if(logger.isInfoEnabled()) {
-			logger.info("동의어 색인을 실시합니다.");
-		}
+		loggerStatic.info("동의어 색인을 실시합니다.");
 		
 		createSynonymIndex();
 
-		if(logger.isInfoEnabled()) {
-			logger.info("동의어 색인 완료");
-		}
-		
+		loggerStatic.info("동의어 색인 완료");		
+	}
+	
+	private Logger logger = LoggerFactory.getLogger(KoreanSynonymEngine.class);
+	
+	public KoreanSynonymEngine() {
 		try {
-			searcher = new IndexSearcher(directory);
+			IndexReader indexReader = IndexReader.open(directory);
+			searcher = new IndexSearcher(indexReader);
 		} catch (CorruptIndexException e) {
 			logger.error("동의어 색인에 대한 Searcher 생성 중 에러 발생함 : " + e);
 			e.printStackTrace();
@@ -74,7 +75,7 @@ public class KoreanSynonymEngine implements Engine {
 		}
 	}
 
-	private void createSynonymIndex() {
+	private static void createSynonymIndex() {
 		
 		directory = new RAMDirectory();
 
@@ -105,21 +106,18 @@ public class KoreanSynonymEngine implements Engine {
 				ramWriter.addDocument(doc);
 			}//end outer for
 			
-			ramWriter.optimize();
 			ramWriter.close();
 
-
-			if(logger.isInfoEnabled())
-				logger.info("동의어 색인 단어 갯수 : " + recordCnt);
+			loggerStatic.info("동의어 색인 단어 갯수 : {}", recordCnt);
 
 		} catch (CorruptIndexException e) {
-			logger.error("동의어 색인 중 에러 발생함 : " + e);
+			loggerStatic.error("동의어 색인 중 에러 발생함 : {}", e);
 			e.printStackTrace();
 		} catch (LockObtainFailedException e) {
-			logger.error("동의어 색인 중 에러 발생함 : " + e);
+			loggerStatic.error("동의어 색인 중 에러 발생함 : {}", e);
 			e.printStackTrace();
 		} catch (IOException e) {
-			logger.error("동의어 색인 중 에러 발생함 : " + e);
+			loggerStatic.error("동의어 색인 중 에러 발생함 : {}", e);
 			e.printStackTrace();
 		}
 	}

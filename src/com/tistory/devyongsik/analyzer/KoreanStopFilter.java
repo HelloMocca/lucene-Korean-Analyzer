@@ -21,7 +21,7 @@ public class KoreanStopFilter extends TokenFilter {
 	private CharTermAttribute charTermAtt;
 	private PositionIncrementAttribute posIncrAtt;
 	private Logger logger = LoggerFactory.getLogger(KoreanStopFilter.class);
-	private List<String> stopWords = new ArrayList<String>();
+	private static List<String> stopWords = new ArrayList<String>();
 	
 	protected KoreanStopFilter(TokenStream input) {
 		super(input);
