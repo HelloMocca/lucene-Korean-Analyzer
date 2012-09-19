@@ -12,47 +12,79 @@ public class DictionaryProperties {
 	
 	private static DictionaryProperties instance = new DictionaryProperties();
 
-	private Properties prop;
+	private Properties defaultProp = new Properties();
+	private Properties customProp = new Properties();
+	
 	private String resourceName = "dictionary.properties";
 	private final String defaultResourceName = "com/tistory/devyongsik/analyzer/dictionary.properties";
 
 	private DictionaryProperties() {
-		loadProperties();
+		loadDefaultProperties();
+		loadCustomProperties();
 	}
 
-	private void loadProperties() {
+	private void loadDefaultProperties() {
 		if(logger.isDebugEnabled())
-			logger.debug("load analyzer properties..... : " + resourceName);
+			logger.debug("load analyzer default properties..... : " + defaultResourceName);
 
 		Class<DictionaryProperties> clazz = DictionaryProperties.class;
 		
-		InputStream in = clazz.getClassLoader().getResourceAsStream(resourceName);
+		InputStream in = clazz.getClassLoader().getResourceAsStream(defaultResourceName);
 		
 		if(in == null) {
-			logger.info(resourceName + " was not found!!! try read default resource : " + defaultResourceName);
-			in = clazz.getClassLoader().getResourceAsStream(defaultResourceName);			
-			logger.info(resourceName + " is loaded.");
+			logger.error(defaultResourceName + " was not found!!!");
+			throw new IllegalStateException(defaultResourceName + " was not found!!!");
 		}
 
-		prop = new Properties();
-
 		try {
-			prop.load(in);
+			defaultProp.load(in);
 			in.close();
 		} catch (IOException e) {
 			logger.error(e.toString());
 		}
 		
 		if(logger.isInfoEnabled()) {
-			logger.info("dictionary.properties : " + prop);
+			logger.info("default dictionary.properties : " + defaultProp);
 		}
 	}
 
+	private void loadCustomProperties() {
+		if(logger.isDebugEnabled())
+			logger.debug("load analyzer custom properties..... : " + resourceName);
+
+		Class<DictionaryProperties> clazz = DictionaryProperties.class;
+		
+		InputStream in = clazz.getClassLoader().getResourceAsStream(resourceName);
+		
+		if(in == null) {
+			logger.warn(customProp + " was not found!!! skip load custom properties");
+			return;
+		}
+
+		try {
+			customProp.load(in);
+			in.close();
+		} catch (IOException e) {
+			logger.error(e.toString());
+		}
+		
+		if(logger.isInfoEnabled()) {
+			logger.info("custom dictionary.properties : " + customProp);
+		}
+	}
+	
 	public static DictionaryProperties getInstance() {
 		return instance;
 	}
 
 	public String getProperty(String key) {
-		return prop.getProperty(key).trim();
+		//read property value from custom properties first
+		String value = customProp.getProperty(key);
+		
+		if(value == null) {
+			value = defaultProp.getProperty(key);
+		}
+		
+		return value.trim();
 	}
 }
