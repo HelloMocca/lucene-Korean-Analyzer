@@ -9,6 +9,7 @@ import java.util.Set;
 import org.apache.lucene.analysis.TokenStream;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
+import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -245,12 +246,36 @@ public class KoreanBaseNounEngineTest extends AnalyzerTestUtil {
 		TokenStream stream = new KoreanNounFilter(new KoreanCharacterTokenizer(reader), engines);
 		CharTermAttribute charTermAtt = stream.getAttribute(CharTermAttribute.class);
 		OffsetAttribute offSetAtt = stream.getAttribute(OffsetAttribute.class);
+		TypeAttribute typeAttr = stream.getAttribute(TypeAttribute.class);
 
 		while(stream.incrementToken()) {
 			TestToken t = getToken(charTermAtt.toString(), offSetAtt.startOffset(), offSetAtt.endOffset());
 			System.out.println("termAtt.term() : " + charTermAtt.toString());
 			System.out.println("offSetAtt : " + offSetAtt.startOffset());
 			System.out.println("offSetAtt : " + offSetAtt.endOffset());
+			System.out.println("typeAtt : " + typeAttr.type());
+			
+			Assert.assertTrue(nouns.contains(t));
+		}
+	}
+	
+	@Test
+	public void testCase8() throws Exception {
+		StringReader reader = new StringReader("랑콤");
+		
+		nouns.add(getToken("랑콤", 0, 2));
+		
+		TokenStream stream = new KoreanNounFilter(new KoreanCharacterTokenizer(reader), engines);
+		CharTermAttribute charTermAtt = stream.getAttribute(CharTermAttribute.class);
+		OffsetAttribute offSetAtt = stream.getAttribute(OffsetAttribute.class);
+		TypeAttribute typeAttr = stream.getAttribute(TypeAttribute.class);
+
+		while(stream.incrementToken()) {
+			TestToken t = getToken(charTermAtt.toString(), offSetAtt.startOffset(), offSetAtt.endOffset());
+			System.out.println("termAtt.term() : " + charTermAtt.toString());
+			System.out.println("offSetAtt : " + offSetAtt.startOffset());
+			System.out.println("offSetAtt : " + offSetAtt.endOffset());
+			System.out.println("typeAtt : " + typeAttr.type());
 
 			Assert.assertTrue(nouns.contains(t));
 		}

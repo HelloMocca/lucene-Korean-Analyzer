@@ -51,6 +51,10 @@ public class KoreanLongestNounEngine implements Engine {
 		}
 		
 		String term = termAttr.toString();
+		//단어 자체에 대한 명사인지 평가
+		if(nounsDic.containsKey(term) || customNounsDic.containsKey(term)) {
+			typeAttr.setType("long_noun");
+		}
 		
 		returnedTokens.put(term+"_"+offSetAttr.startOffset()+"_"+offSetAttr.endOffset(), "");
 		
@@ -100,7 +104,7 @@ public class KoreanLongestNounEngine implements Engine {
 
 					positionAttr.setPositionIncrement(1);  //추출된 명사이기 때문에 위치정보를 1로 셋팅
 					//타입을 noun으로 설정한다.
-					typeAttr.setType("noun"); 
+					typeAttr.setType("long_noun"); 
 					
 					offSetAttr.setOffset(startOffSet , endOffSet);
 					

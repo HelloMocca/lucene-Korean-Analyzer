@@ -134,7 +134,7 @@ public class KoreanMorphEngine implements Engine {
 			    offsetAttrResult.setOffset(offsetAttr.startOffset() + (index!=-1?index:0), index!=-1?offsetAttr.startOffset()+index+text.length():offsetAttr.endOffset());
 
 			    TypeAttribute typeAttrResult = attrSource.addAttribute(TypeAttribute.class);
-			    typeAttrResult.setType("noun");
+			    typeAttrResult.setType("morph_noun");
 
 			    String makeKeyForCheck = text + "_" + offsetAttrResult.startOffset() + "_" + offsetAttrResult.endOffset();
 				
