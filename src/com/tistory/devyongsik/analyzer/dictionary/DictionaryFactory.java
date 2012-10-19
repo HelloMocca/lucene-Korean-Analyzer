@@ -133,4 +133,25 @@ public class DictionaryFactory {
 		
 		return words;
 	}
+	
+	public void rebuildDictionary(DictionaryType dictionaryType) {
+		
+		if(DictionaryType.CUSTOM == dictionaryType) {
+			List<String> customNouns = dictionaryMap.get(DictionaryType.CUSTOM);
+			customNounDictionaryMap.clear();
+			for(String noun : customNouns) {
+				customNounDictionaryMap.put(noun, null);
+			}
+			
+			return;
+		}
+		
+		if(DictionaryType.COMPOUND == dictionaryType) {
+			List<String> customNouns = dictionaryMap.get(DictionaryType.CUSTOM);
+			customNounDictionaryMap.clear();
+			for(String noun : customNouns) {
+				customNounDictionaryMap.put(noun, null);
+			}
+		}
+	}
 }
