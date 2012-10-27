@@ -23,6 +23,7 @@ public class DictionaryFactory {
 	private Map<String, List<String>> compoundDictionaryMap = new HashMap<String, List<String>>();
 	private Map<String, String> baseNounDictionaryMap = new HashMap<String, String>();
 	private Map<String, String> customNounDictionaryMap = new HashMap<String, String>();
+	private Map<String, String> stopDictionaryMap = new HashMap<String, String>();
 	
 	//private final String defaultDictionaryPackage = "com/tistory/devyongsik/analyzer/dictionary/";
 
@@ -70,6 +71,11 @@ public class DictionaryFactory {
 		for(String noun : customNouns) {
 			customNounDictionaryMap.put(noun, null);
 		}
+		
+		List<String> stopWords = dictionaryMap.get(DictionaryType.STOP);
+		for(String stopWord : stopWords) {
+			stopDictionaryMap.put(stopWord, null);
+		}
 	}
 	
 	public List<String> get(DictionaryType name) {
@@ -86,6 +92,10 @@ public class DictionaryFactory {
 	
 	public Map<String, String> getCustomNounDictionary() {
 		return customNounDictionaryMap;
+	}
+	
+	public Map<String, String> getStopWordsDictionary() {
+		return stopDictionaryMap;
 	}
 	
 	private List<String> loadDictionary(DictionaryType name) {
@@ -110,7 +120,7 @@ public class DictionaryFactory {
 			
 			
 			while( (readWord = in.readLine()) != null ) {
-				words.add(readWord);
+				words.add(readWord.trim());
 			}
 
 			if(logger.isInfoEnabled()) {
@@ -151,6 +161,14 @@ public class DictionaryFactory {
 			customNounDictionaryMap.clear();
 			for(String noun : customNouns) {
 				customNounDictionaryMap.put(noun, null);
+			}
+		}
+		
+		if(DictionaryType.STOP == dictionaryType) {
+			List<String> stopWords = dictionaryMap.get(DictionaryType.STOP);
+			stopDictionaryMap.clear();
+			for(String stopWord : stopWords) {
+				stopDictionaryMap.put(stopWord, null);
 			}
 		}
 	}

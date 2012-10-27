@@ -1,8 +1,8 @@
 package com.tistory.devyongsik.analyzer;
 
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import org.apache.lucene.analysis.TokenFilter;
 import org.apache.lucene.analysis.TokenStream;
@@ -12,7 +12,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryFactory;
-import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
 
 public class KoreanStopFilter extends TokenFilter {
 
@@ -21,7 +20,7 @@ public class KoreanStopFilter extends TokenFilter {
 	private CharTermAttribute charTermAtt;
 	private PositionIncrementAttribute posIncrAtt;
 	private Logger logger = LoggerFactory.getLogger(KoreanStopFilter.class);
-	private static List<String> stopWords = new ArrayList<String>();
+	private static Map<String, String> stopWordsMap = null;
 	
 	protected KoreanStopFilter(TokenStream input) {
 		super(input);
@@ -33,7 +32,9 @@ public class KoreanStopFilter extends TokenFilter {
 		posIncrAtt = getAttribute(PositionIncrementAttribute.class);
 		
 		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
-		stopWords = dictionaryFactory.get(DictionaryType.STOP);
+		stopWordsMap = dictionaryFactory.getStopWordsDictionary();
+		
+		System.out.println(stopWordsMap);
 	}
 
 	public void setEnablePositionIncrements(boolean enable) {
@@ -54,12 +55,14 @@ public class KoreanStopFilter extends TokenFilter {
 		// return the first non-stop word found
 		int skippedPositions = 0;
 
+		//stopWordsMap.put("nbsp", null);
+		
 		while(input.incrementToken()) {
 
 			if(logger.isDebugEnabled())
-				logger.debug("원래 리턴 될 TermAtt : " + charTermAtt.toString() + " , stopWordDic.isExist : " + stopWords.contains(charTermAtt.toString()));
+				logger.debug("원래 리턴 될 TermAtt : " + charTermAtt.toString() + " , stopWordDic.isExist : " + stopWordsMap.containsKey(charTermAtt.toString()));
 
-			if(!stopWords.contains(charTermAtt.toString())) {
+			if(!stopWordsMap.containsKey(charTermAtt.toString())) {
 				if(enablePositionIncrements) {
 					posIncrAtt.setPositionIncrement(posIncrAtt.getPositionIncrement() + skippedPositions);
 				}
