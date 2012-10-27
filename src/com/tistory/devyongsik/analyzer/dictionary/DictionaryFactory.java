@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tistory.devyongsik.analyzer.DictionaryProperties;
+import com.tistory.devyongsik.analyzer.dictionaryindex.SynonymDictionaryIndex;
 
 public class DictionaryFactory {
 	private Logger logger = LoggerFactory.getLogger(DictionaryFactory.class);
@@ -25,11 +26,7 @@ public class DictionaryFactory {
 	private Map<String, String> customNounDictionaryMap = new HashMap<String, String>();
 	private Map<String, String> stopDictionaryMap = new HashMap<String, String>();
 	
-	//private final String defaultDictionaryPackage = "com/tistory/devyongsik/analyzer/dictionary/";
-
-	//TODO 사전 중복으로 읽지 않도록..
-	//TODO 사전을 Map으로.. 초성 분리..맵 고민
-	
+		
 	public static DictionaryFactory getFactory() {
 		return factory;
 	}
@@ -170,6 +167,12 @@ public class DictionaryFactory {
 			for(String stopWord : stopWords) {
 				stopDictionaryMap.put(stopWord, null);
 			}
+		}
+		
+		if(DictionaryType.SYNONYM == dictionaryType) {
+			List<String> synonymWords = dictionaryMap.get(DictionaryType.SYNONYM);
+			SynonymDictionaryIndex indexModule = SynonymDictionaryIndex.getIndexingModule();
+			indexModule.indexingDictionary(synonymWords);
 		}
 	}
 }

@@ -32,8 +32,6 @@ public class KoreanStopFilter extends TokenFilter {
 		
 		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
 		stopWordsMap = dictionaryFactory.getStopWordsDictionary();
-		
-		System.out.println(stopWordsMap);
 	}
 
 	public void setEnablePositionIncrements(boolean enable) {
@@ -53,8 +51,6 @@ public class KoreanStopFilter extends TokenFilter {
 
 		// return the first non-stop word found
 		int skippedPositions = 0;
-
-		//stopWordsMap.put("nbsp", null);
 		
 		while(input.incrementToken()) {
 

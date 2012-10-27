@@ -1,125 +1,44 @@
 package com.tistory.devyongsik.analyzer;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Stack;
 
-import org.apache.lucene.analysis.Analyzer;
-import org.apache.lucene.analysis.SimpleAnalyzer;
 import org.apache.lucene.analysis.tokenattributes.CharTermAttribute;
 import org.apache.lucene.analysis.tokenattributes.OffsetAttribute;
 import org.apache.lucene.analysis.tokenattributes.PositionIncrementAttribute;
 import org.apache.lucene.analysis.tokenattributes.TypeAttribute;
 import org.apache.lucene.document.Document;
-import org.apache.lucene.document.Field;
-import org.apache.lucene.document.Field.Index;
-import org.apache.lucene.document.Field.Store;
-import org.apache.lucene.document.Field.TermVector;
-import org.apache.lucene.index.CorruptIndexException;
-import org.apache.lucene.index.IndexReader;
-import org.apache.lucene.index.IndexWriter;
-import org.apache.lucene.index.IndexWriterConfig;
 import org.apache.lucene.index.Term;
 import org.apache.lucene.search.IndexSearcher;
 import org.apache.lucene.search.Query;
 import org.apache.lucene.search.ScoreDoc;
+import org.apache.lucene.search.SearcherManager;
 import org.apache.lucene.search.TermQuery;
 import org.apache.lucene.search.TopScoreDocCollector;
-import org.apache.lucene.store.LockObtainFailedException;
-import org.apache.lucene.store.RAMDirectory;
 import org.apache.lucene.util.AttributeSource;
 import org.apache.lucene.util.AttributeSource.State;
-import org.apache.lucene.util.Version;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryFactory;
 import com.tistory.devyongsik.analyzer.dictionary.DictionaryType;
+import com.tistory.devyongsik.analyzer.dictionaryindex.SynonymDictionaryIndex;
 
 public class KoreanSynonymEngine implements Engine {
 
-	private static RAMDirectory directory;
-	private static IndexSearcher searcher;
-	
-	private static List<String> synonyms = new ArrayList<String>();
-	private static Logger loggerStatic = LoggerFactory.getLogger(KoreanSynonymEngine.class);
-	
-	static {
-		
-		loggerStatic.info("init KoreanSynonymEngine");
-		
-		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();	
-		synonyms = dictionaryFactory.get(DictionaryType.SYNONYM);
-		
-		loggerStatic.info("동의어 색인을 실시합니다.");
-		
-		createSynonymIndex();
-
-		loggerStatic.info("동의어 색인 완료");		
-	}
-	
 	private Logger logger = LoggerFactory.getLogger(KoreanSynonymEngine.class);
-	
-	public KoreanSynonymEngine() {
-		try {
-			IndexReader indexReader = IndexReader.open(directory);
-			searcher = new IndexSearcher(indexReader);
-		} catch (CorruptIndexException e) {
-			logger.error("동의어 색인에 대한 Searcher 생성 중 에러 발생함 : " + e);
-			e.printStackTrace();
-		} catch (IOException e) {
-			logger.error("동의어 색인에 대한 Searcher 생성 중 에러 발생함 : " + e);
-			e.printStackTrace();
-		}
+
+	static {
+		DictionaryFactory dictionaryFactory = DictionaryFactory.getFactory();
+		createSynonymIndex(dictionaryFactory.get(DictionaryType.SYNONYM));
 	}
-
-	private static void createSynonymIndex() {
-		
-		directory = new RAMDirectory();
-
-		try {
-
-			Analyzer analyzer = new SimpleAnalyzer(Version.LUCENE_31); //문서 내용을 분석 할 때 사용 될 Analyzer
-			IndexWriterConfig iwc = new IndexWriterConfig(Version.LUCENE_31, analyzer);
-
-			IndexWriter ramWriter = new IndexWriter(directory, iwc);
-			
-			int recordCnt = 0;
-			//동의어들을 ,로 잘라내어 색인합니다.
-			//하나의 document에 syn이라는 이름의 필드를 여러개 추가합니다.
-			//나중에 syn=노트북 으로 검색한다면 그때 나온 결과 Document로부터 
-			//모든 동의어 리스트를 얻을 수 있습니다.
-			for(String syn : synonyms) {
-				String[] synonymWords = syn.split(",");
-				Document doc = new Document();
-				for(int i = 0, size = synonymWords.length; i < size ; i++) {
-					
 	
-					String fieldValue = synonymWords[i];
-					Field field = new Field("syn",fieldValue,Store.YES,Index.NOT_ANALYZED_NO_NORMS, TermVector.NO);
-					doc.add(field);
-	
-					recordCnt++;
-				}//end inner for
-				ramWriter.addDocument(doc);
-			}//end outer for
-			
-			ramWriter.close();
+	private static void createSynonymIndex(List<String> synonyms) {
 
-			loggerStatic.info("동의어 색인 단어 갯수 : {}", recordCnt);
-
-		} catch (CorruptIndexException e) {
-			loggerStatic.error("동의어 색인 중 에러 발생함 : {}", e);
-			e.printStackTrace();
-		} catch (LockObtainFailedException e) {
-			loggerStatic.error("동의어 색인 중 에러 발생함 : {}", e);
-			e.printStackTrace();
-		} catch (IOException e) {
-			loggerStatic.error("동의어 색인 중 에러 발생함 : {}", e);
-			e.printStackTrace();
-		}
+		SynonymDictionaryIndex indexingModule = SynonymDictionaryIndex.getIndexingModule();
+		indexingModule.indexingDictionary(synonyms);
 	}
 
 	private List<String> getWords(String word) throws Exception {
@@ -129,13 +48,18 @@ public class KoreanSynonymEngine implements Engine {
 		}
 
 		Query query = new TermQuery(new Term("syn",word));
-		
+
 		if(logger.isDebugEnabled()) {
 			logger.debug("query : " + query);
 		}
 		
+		SynonymDictionaryIndex indexingModule = SynonymDictionaryIndex.getIndexingModule();
+		SearcherManager searcherManager = indexingModule.getSearcherManager();
+		searcherManager.maybeRefresh();
+		IndexSearcher indexSearcher = searcherManager.acquire();
+		
 		TopScoreDocCollector collector = TopScoreDocCollector.create(5 * 5, false);
-		searcher.search(query, collector);
+		indexSearcher.search(query, collector);
 		ScoreDoc[] hits = collector.topDocs().scoreDocs;
 
 		if(logger.isDebugEnabled()) {
@@ -145,7 +69,7 @@ public class KoreanSynonymEngine implements Engine {
 		}
 
 		for(int i = 0; i < hits.length; i++) {
-			Document doc = searcher.doc(hits[i].doc);
+			Document doc = indexSearcher.doc(hits[i].doc);
 
 			String[] values = doc.getValues("syn");
 
@@ -158,6 +82,10 @@ public class KoreanSynonymEngine implements Engine {
 				}
 			}
 		}
+		
+		searcherManager.release(indexSearcher);
+		indexSearcher = null;
+		
 		return synWordList;
 	}
 
@@ -165,33 +93,33 @@ public class KoreanSynonymEngine implements Engine {
 	public void collectNounState(AttributeSource attributeSource, Stack<State> nounsStack, Map<String, String> returnedTokens) throws Exception {
 		CharTermAttribute charTermAttr = attributeSource.getAttribute(CharTermAttribute.class);
 		OffsetAttribute offSetAttr = attributeSource.getAttribute(OffsetAttribute.class);
-		
+
 		returnedTokens.put(charTermAttr.toString()+"_"+offSetAttr.startOffset()+"_"+offSetAttr.endOffset(), "");
-		
+
 		if(logger.isDebugEnabled())
 			logger.debug("넘어온 Term : " + charTermAttr.toString());
-		
+
 		List<String> synonyms = getWords(charTermAttr.toString());
 
 		if (synonyms.size() == 0) new Stack<State>(); //동의어 없음
 
 		for (int i = 0; i < synonyms.size(); i++) {
-			
+
 			String synonymWord = synonyms.get(i);
 			String makeKeyForCheck = synonymWord + "_" + offSetAttr.startOffset() + "_" + offSetAttr.endOffset();
-			
+
 			if(returnedTokens.containsKey(makeKeyForCheck)) {
-				
+
 				if(logger.isDebugEnabled()) {
 					logger.debug("["+makeKeyForCheck+"] 는 이미 추출된 Token입니다. Skip");
 				}
-				
+
 				continue;
-				
+
 			} else {
 				returnedTokens.put(makeKeyForCheck, "");
 			}
-			
+
 			//#1. 동의어는 키워드 정보와 Type정보, 위치증가정보만 변경되고 나머지 속성들은 원본과 동일하기 때문에
 			//attributeSource로부터 변경이 필요한 정보만 가져와서 필요한 정보를 변경한다.
 			//offset은 원본과 동일하기 때문에 건드리지 않는다.
@@ -203,7 +131,7 @@ public class KoreanSynonymEngine implements Engine {
 			TypeAttribute typeAtt = attributeSource.getAttribute(TypeAttribute.class); //원본 AttributeSource의 Attribute를 받아옴
 			//타입을 synonym으로 설정한다. 나중에 명사추출 시 동의어 타입은 건너뛰기 위함
 			typeAtt.setType("synonym"); 
-			
+
 			nounsStack.push(attributeSource.captureState()); //추출된 동의어에 대한 AttributeSource를 Stack에 저장
 		}
 		return;
