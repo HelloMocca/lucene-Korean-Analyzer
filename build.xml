@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="walkingword" basedir="." default="usage">
+<project name="luceneKoreanAnalyzer" basedir="." default="create.jarfile">
 
 	<property name="name" value="luceneKoreanAnalyzer"/>
 	<property name="plugin-lib" value="KrAnalyzer_1.0.jar"/>
