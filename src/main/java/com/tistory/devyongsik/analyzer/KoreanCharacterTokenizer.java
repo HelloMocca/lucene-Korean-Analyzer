@@ -86,7 +86,7 @@ public class KoreanCharacterTokenizer extends Tokenizer {
 	}
 
 	@Override
-	public boolean incrementToken() throws IOException {
+	public final boolean incrementToken() throws IOException {
 		Logger logger = LoggerFactory.getLogger(KoreanCharacterTokenizer.class);
 		
 		clearAttributes();

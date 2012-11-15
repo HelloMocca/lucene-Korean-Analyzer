@@ -4,9 +4,9 @@
   <groupId>com.tistory.devyongsik</groupId>
   <artifactId>luceneKoreanAnalyzer</artifactId>
   <packaging>jar</packaging>
-  <version>1.0-SNAPSHOT</version>
-  <name>luceneKoreanAnalyzer</name>
-  <url>https://github.com/need4spd/luceneKoreanAnalyzer</url>
+  <version>0.5-SNAPSHOT</version>
+  <name>lucene-Korean-Analyzer</name>
+  <url>https://github.com/need4spd/lucene-Korean-Analyzer</url>
   
   <properties>
     <slf4j.version>1.6.6</slf4j.version>
@@ -60,7 +60,7 @@
   </dependencies>
   
   <build>
-    <finalName>luceneKoreanAnalyzer</finalName><resources>
+    <finalName>lucene-Korean-Analyzer</finalName><resources>
     <resource>
       <directory>src/main/resources</directory>
     </resource>

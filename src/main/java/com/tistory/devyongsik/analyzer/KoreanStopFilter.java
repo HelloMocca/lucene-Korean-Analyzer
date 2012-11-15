@@ -43,7 +43,7 @@ public class KoreanStopFilter extends TokenFilter {
 	}
 	
 	@Override
-	public boolean incrementToken() throws IOException {
+	public final boolean incrementToken() throws IOException {
 		
 		if(logger.isDebugEnabled())
 			logger.debug("incrementToken KoreanStopFilter");
