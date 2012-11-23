@@ -25,10 +25,10 @@ public class KoreanStemEngineTest extends AnalyzerTestUtil {
 	public void initDictionary() {
 		stemmingToken.add(getToken("사랑", 11, 13));
 		stemmingToken.add(getToken("사랑커녕", 11, 15));
-		stemmingToken.add(getToken("사랑", 5, 7));
 		stemmingToken.add(getToken("사랑치고는", 5, 10));
-		stemmingToken.add(getToken("사랑", 0, 2));
 		stemmingToken.add(getToken("사랑하고", 0, 4));
+		stemmingToken.add(getToken("사랑하", 0, 3));
+		stemmingToken.add(getToken("사랑치", 5, 8));
 		
 		engines.add(new KoreanStemmingEngine());
 	}
